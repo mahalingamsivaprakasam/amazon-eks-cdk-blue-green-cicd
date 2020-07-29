@@ -65,7 +65,7 @@ pipeline {
 
     stage ('Deploy to Green Env Stage') {
       steps {
-        withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        //withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
           sh label: '', script: '''echo "==================="
           echo "Post-Build Stage"
           echo "==================="
@@ -87,7 +87,7 @@ pipeline {
           kubectl get deploy -n flask-alb
           kubectl get svc -n flask-alb
           '''
-        }
+        //}
       }
     }
 
@@ -96,7 +96,7 @@ pipeline {
         message "Do you want to proceed for production deployment?"
       }
       steps {
-        withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        //withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
           sh label: '', script: '''echo "==================="
           echo "Swap Stage"
           echo "==================="
@@ -120,7 +120,7 @@ pipeline {
           kubectl get deploy -n flask-alb
           kubectl get svc -n flask-alb
           '''
-        }
+       // }
       }
     }
 

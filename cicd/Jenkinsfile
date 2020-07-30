@@ -5,11 +5,8 @@ pipeline {
   stages {
     stage('Pre-Build Stage') {
       steps {
-        //withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
           sh '''
-          export AWS_ACCESS_KEY_ID=ASIA3BB2FQB22LYAQLQE
-          export AWS_SECRET_ACCESS_KEY=3UccJTDoqpWqhrt+o0Fk/Hjyv016BQVY2DrpxCWh
-          export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEDwaCXVzLWVhc3QtMSJHMEUCIFrJWUtANxRJPM3Fe0NRwVshkY0MlMzKBNGvgmKWJvivAiEAz7AYXE4Kqvo4TfHVlaxJ14MbLhR0lz+T0+tD9nZJvYoqoAII9P//////////ARAAGgw3NTgxODM3MjMxMjUiDG1p3InwCkKnu4lc/Cr0Aefh35ibltkE1nDQ1zVnJT3khlZqwl48yzy0wFa2Hs1GkDjLo/2N9UaAXWp08g+OBdqb4xEGQfhhJEHBUceU4eOl7xn7OM/XQa0APipfPZs+0lLusyyD71YlgEsp/vCDa19v38t/XzZ6dXdgoLKq3i/YrjC1wiQSTMhZsWijtMBHiSXNtDPOxr0cutsVvNrcnK+frIv5qjy23X2rw+VSifHjxJrKK1n77t/9iAa4wPYxHhbOPunEA+NvIs7DxcgSc2PitRGpw8GqsG8o8h298pwJRz9ZJ8A2VrPc3a/6u1X5aR9vXx99hewn3K2Q8b+2Ta/TUDow9fCB+QU6nQH0KCXGVqxtHHAK9YnIYApes4JOK5JX1ZoKqjCHmHgYsAQxw5zo3H84+pLbW8Gg7i9knFgu92KF1NWqCwA69jpODdx0Sdq/eaB8qsOVN0YvIclzhXNDGZJcHNqb7sMcMFWurHWoGDwo5RISETIhXlSTsDkjNnWbLhlFLLZW4C9HFpyEoFw2S1K1GrreDSFZhnz3k83zxMzzIAO443mn
           echo "Setting Environment Variables Stage"
           export AWS_REGION=${JENKINS_AWS_REGION}
           aws configure set region ${AWS_REGION}
@@ -31,19 +28,16 @@ pipeline {
           set > ~/.vars
           cat ~/.vars
           '''
-        //}
+        }
       }
     }
 
     stage ('Build & Containerize Stage') {
       steps {
-       // withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
           sh label: '', script: '''echo "==================="
           echo "Build Stage"
           echo "==================="
-          export AWS_ACCESS_KEY_ID=ASIA3BB2FQB22LYAQLQE
-          export AWS_SECRET_ACCESS_KEY=3UccJTDoqpWqhrt+o0Fk/Hjyv016BQVY2DrpxCWh
-          export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEDwaCXVzLWVhc3QtMSJHMEUCIFrJWUtANxRJPM3Fe0NRwVshkY0MlMzKBNGvgmKWJvivAiEAz7AYXE4Kqvo4TfHVlaxJ14MbLhR0lz+T0+tD9nZJvYoqoAII9P//////////ARAAGgw3NTgxODM3MjMxMjUiDG1p3InwCkKnu4lc/Cr0Aefh35ibltkE1nDQ1zVnJT3khlZqwl48yzy0wFa2Hs1GkDjLo/2N9UaAXWp08g+OBdqb4xEGQfhhJEHBUceU4eOl7xn7OM/XQa0APipfPZs+0lLusyyD71YlgEsp/vCDa19v38t/XzZ6dXdgoLKq3i/YrjC1wiQSTMhZsWijtMBHiSXNtDPOxr0cutsVvNrcnK+frIv5qjy23X2rw+VSifHjxJrKK1n77t/9iAa4wPYxHhbOPunEA+NvIs7DxcgSc2PitRGpw8GqsG8o8h298pwJRz9ZJ8A2VrPc3a/6u1X5aR9vXx99hewn3K2Q8b+2Ta/TUDow9fCB+QU6nQH0KCXGVqxtHHAK9YnIYApes4JOK5JX1ZoKqjCHmHgYsAQxw5zo3H84+pLbW8Gg7i9knFgu92KF1NWqCwA69jpODdx0Sdq/eaB8qsOVN0YvIclzhXNDGZJcHNqb7sMcMFWurHWoGDwo5RISETIhXlSTsDkjNnWbLhlFLLZW4C9HFpyEoFw2S1K1GrreDSFZhnz3k83zxMzzIAO443mn
           echo "++++++++++++++++"
           source ~/.vars
           eval $kubectlcmd
@@ -59,19 +53,16 @@ pipeline {
           docker push $ECR_REPO_URI:$TAG
           
           '''
-       // }
+        }
       }
     }
 
     stage ('Deploy to Green Env Stage') {
       steps {
-        //withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
           sh label: '', script: '''echo "==================="
           echo "Post-Build Stage"
           echo "==================="
-          export AWS_ACCESS_KEY_ID=ASIA3BB2FQB22LYAQLQE
-          export AWS_SECRET_ACCESS_KEY=3UccJTDoqpWqhrt+o0Fk/Hjyv016BQVY2DrpxCWh
-          export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEDwaCXVzLWVhc3QtMSJHMEUCIFrJWUtANxRJPM3Fe0NRwVshkY0MlMzKBNGvgmKWJvivAiEAz7AYXE4Kqvo4TfHVlaxJ14MbLhR0lz+T0+tD9nZJvYoqoAII9P//////////ARAAGgw3NTgxODM3MjMxMjUiDG1p3InwCkKnu4lc/Cr0Aefh35ibltkE1nDQ1zVnJT3khlZqwl48yzy0wFa2Hs1GkDjLo/2N9UaAXWp08g+OBdqb4xEGQfhhJEHBUceU4eOl7xn7OM/XQa0APipfPZs+0lLusyyD71YlgEsp/vCDa19v38t/XzZ6dXdgoLKq3i/YrjC1wiQSTMhZsWijtMBHiSXNtDPOxr0cutsVvNrcnK+frIv5qjy23X2rw+VSifHjxJrKK1n77t/9iAa4wPYxHhbOPunEA+NvIs7DxcgSc2PitRGpw8GqsG8o8h298pwJRz9ZJ8A2VrPc3a/6u1X5aR9vXx99hewn3K2Q8b+2Ta/TUDow9fCB+QU6nQH0KCXGVqxtHHAK9YnIYApes4JOK5JX1ZoKqjCHmHgYsAQxw5zo3H84+pLbW8Gg7i9knFgu92KF1NWqCwA69jpODdx0Sdq/eaB8qsOVN0YvIclzhXNDGZJcHNqb7sMcMFWurHWoGDwo5RISETIhXlSTsDkjNnWbLhlFLLZW4C9HFpyEoFw2S1K1GrreDSFZhnz3k83zxMzzIAO443mn
           echo "++++++++++++++++"
           source ~/.vars
           eval $kubectlcmd
@@ -87,7 +78,7 @@ pipeline {
           kubectl get deploy -n flask-alb
           kubectl get svc -n flask-alb
           '''
-        //}
+        }
       }
     }
 
@@ -96,13 +87,10 @@ pipeline {
         message "Do you want to proceed for production deployment?"
       }
       steps {
-        //withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+        withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'ceee051b-3f7e-40e2-b4bd-5b4278d525bf', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
           sh label: '', script: '''echo "==================="
           echo "Swap Stage"
           echo "==================="
-          export AWS_ACCESS_KEY_ID=ASIA3BB2FQB22LYAQLQE
-          export AWS_SECRET_ACCESS_KEY=3UccJTDoqpWqhrt+o0Fk/Hjyv016BQVY2DrpxCWh
-          export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEDwaCXVzLWVhc3QtMSJHMEUCIFrJWUtANxRJPM3Fe0NRwVshkY0MlMzKBNGvgmKWJvivAiEAz7AYXE4Kqvo4TfHVlaxJ14MbLhR0lz+T0+tD9nZJvYoqoAII9P//////////ARAAGgw3NTgxODM3MjMxMjUiDG1p3InwCkKnu4lc/Cr0Aefh35ibltkE1nDQ1zVnJT3khlZqwl48yzy0wFa2Hs1GkDjLo/2N9UaAXWp08g+OBdqb4xEGQfhhJEHBUceU4eOl7xn7OM/XQa0APipfPZs+0lLusyyD71YlgEsp/vCDa19v38t/XzZ6dXdgoLKq3i/YrjC1wiQSTMhZsWijtMBHiSXNtDPOxr0cutsVvNrcnK+frIv5qjy23X2rw+VSifHjxJrKK1n77t/9iAa4wPYxHhbOPunEA+NvIs7DxcgSc2PitRGpw8GqsG8o8h298pwJRz9ZJ8A2VrPc3a/6u1X5aR9vXx99hewn3K2Q8b+2Ta/TUDow9fCB+QU6nQH0KCXGVqxtHHAK9YnIYApes4JOK5JX1ZoKqjCHmHgYsAQxw5zo3H84+pLbW8Gg7i9knFgu92KF1NWqCwA69jpODdx0Sdq/eaB8qsOVN0YvIclzhXNDGZJcHNqb7sMcMFWurHWoGDwo5RISETIhXlSTsDkjNnWbLhlFLLZW4C9HFpyEoFw2S1K1GrreDSFZhnz3k83zxMzzIAO443mn
           echo "++++++++++++++++"
           source ~/.vars
           eval $kubectlcmd
@@ -120,7 +108,7 @@ pipeline {
           kubectl get deploy -n flask-alb
           kubectl get svc -n flask-alb
           '''
-       // }
+        }
       }
     }
 
